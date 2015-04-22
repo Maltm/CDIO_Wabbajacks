@@ -1,13 +1,18 @@
 package robot;
 
-import lejos.nxt.Button;
-import lejos.nxt.LCD;
 import lejos.nxt.Motor;
+import lejos.nxt.UltrasonicSensor;
 
 public class movement {
+	/**
+	 * stop()
+	 * stop the movement of both wheels
+	 */
 	public void stop() {
-		Motor.A.stop();
-		Motor.B.stop();
+//		Motor.A.stop();
+//		Motor.B.stop();
+		Motor.A.stop(true);
+		Motor.B.stop(true);
 	}
 	
 	public void forward(int i) {
@@ -15,8 +20,6 @@ public class movement {
 		Motor.B.setSpeed(i);
 		Motor.A.forward();
 		Motor.B.forward();
-		Button.waitForAnyPress();
-		stop();
 	}
 	
 	public void backward(int i) {
@@ -24,8 +27,6 @@ public class movement {
 		Motor.B.setSpeed(i);
 		Motor.A.backward();
 		Motor.B.backward();
-		Button.waitForAnyPress();
-		stop();
 	}
 	
 	public void hardLeft(int i) {
@@ -33,8 +34,6 @@ public class movement {
 		Motor.B.setSpeed(i);
 		Motor.A.forward();
 		Motor.B.backward();
-		Button.waitForAnyPress();
-		stop();
 	}
 	
 	public void hardRight(int i) {
@@ -42,8 +41,6 @@ public class movement {
 		Motor.B.setSpeed(i);
 		Motor.B.forward();
 		Motor.A.backward();
-		Button.waitForAnyPress();
-		stop();
 	}
 	
 	public void softLeft(int i) {
@@ -51,8 +48,6 @@ public class movement {
 		Motor.B.setSpeed((int)(i*0.33));
 		Motor.A.forward();
 		Motor.B.forward();
-		Button.waitForAnyPress();
-		stop();
 	}
 	
 	public void softRight(int i) {
@@ -60,8 +55,9 @@ public class movement {
 		Motor.B.setSpeed(i);
 		Motor.A.forward();
 		Motor.B.forward();
-		Button.waitForAnyPress();
-		stop();
 	}
 	
+	public void corner(UltrasonicSensor US, int direction){
+		
+	}
 }
