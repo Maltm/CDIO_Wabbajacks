@@ -2,40 +2,47 @@ package camCom;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
-import lejos.pc.comm.NXTComm;
-import lejos.pc.comm.NXTCommException;
-import lejos.pc.comm.NXTCommFactory;
-import lejos.pc.comm.NXTInfo;
+import lejos.nxt.Button;
+import lejos.nxt.LCD;
+import lejos.nxt.comm.*;
 
 public class RobotConnection {
-	private NXTComm ncom;
-	private NXTInfo ninf;
 	private String address;
+	private DataInputStream in;
+	private DataOutputStream out;
 	
-	private final String SHEO_ADDRESS = "00:16:53:0A:71:1B";
+	// private final String SHEO_ADDRESS = "00:16:53:0A:71:1B";
 	
 	/**
 	 * Class constructor.
 	 */
 	public RobotConnection(String address) {
-		this.address = address;
+		NXTConnection conn = Bluetooth.waitForConnection();
+		
+		in = conn.openDataInputStream();
+		out = conn.openDataOutputStream();
+		
+		String s = null;
 		
 		try {
-			ncom = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
-			ninf = new NXTInfo(NXTCommFactory.BLUETOOTH, "NXT", SHEO_ADDRESS);
-			
-			if(ncom.open(ninf)) System.out.println("Connected");
-			
-			DataOutputStream out = (DataOutputStream) ncom.getOutputStream();
-			DataInputStream in = (DataInputStream) ncom.getInputStream();
-		} catch (NXTCommException e) {
-			System.out.println("Communication error.");
-			e.printStackTrace();
+			while((s = in.readUTF()) != null) {
+				LCD.drawString(s, 0, 0);
+				
+				Button.waitForAnyPress();
+				
+				out.writeBytes("Received: " + s);
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			try {
+				out.close();
+				in.close();
+			} catch(IOException e) {
+				System.out.println(e.getMessage());
+			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		new RobotConnection("rofl");
 	}
 }
