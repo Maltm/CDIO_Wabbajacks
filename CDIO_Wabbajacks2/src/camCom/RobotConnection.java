@@ -9,7 +9,6 @@ import lejos.nxt.LCD;
 import lejos.nxt.comm.*;
 
 public class RobotConnection {
-	private String address;
 	private DataInputStream in;
 	private DataOutputStream out;
 	
@@ -18,7 +17,7 @@ public class RobotConnection {
 	/**
 	 * Class constructor.
 	 */
-	public RobotConnection(String address) {
+	public RobotConnection() {
 		NXTConnection conn = Bluetooth.waitForConnection();
 		
 		in = conn.openDataInputStream();
@@ -44,5 +43,9 @@ public class RobotConnection {
 				System.out.println(e.getMessage());
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		new RobotConnection();
 	}
 }
