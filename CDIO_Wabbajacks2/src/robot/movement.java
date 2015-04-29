@@ -60,4 +60,16 @@ public class movement {
 	public void corner(UltrasonicSensor US, int direction){
 		
 	}
+	
+	public void turn90(boolean right){
+		Motor.A.resetTachoCount();
+		Motor.B.resetTachoCount();
+		
+		if(right){
+			Motor.B.rotate(375);
+		}
+		else{
+			Motor.A.rotate(375);
+		}
+	}
 }
