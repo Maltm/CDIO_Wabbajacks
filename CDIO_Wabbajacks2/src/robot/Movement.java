@@ -3,7 +3,7 @@ package robot;
 import lejos.nxt.Motor;
 import lejos.nxt.UltrasonicSensor;
 
-public class movement {
+public class Movement {
 	/**
 	 * stop()
 	 * stop the movement of both wheels

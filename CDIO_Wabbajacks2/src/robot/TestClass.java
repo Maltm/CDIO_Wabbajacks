@@ -1,39 +1,28 @@
 package robot;
 
-import org.jfree.util.WaitingImageObserver;
-
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 
 public class TestClass {
-	final static int FORSPEED = 400;
-
-	public static void main(String[] args) {
-		movement move = new movement();
-
-		System.out.println(SensorPort.getInstance(1));
-
-		UltrasonicSensor US = new UltrasonicSensor(SensorPort.S1);
-		boolean ENTERdown = false;
-		
-		LCD.drawString("Test", 0, 0);
-		Button.waitForAnyPress();
-		
-		while(true){
-		move.turn90(true);
-		Button.waitForAnyPress();
-		
-		move.turn90(false);
-		Button.waitForAnyPress();
+	final int FORSPEED = 400;
+	final Movement robotMovement = new Movement();
+	
+	public TestClass(int action) {
+		switch(action) {
+			case 1:
+				moveTest(robotMovement);
+				break;
+			case 2:
+				ultraTest(new UltrasonicSensor(SensorPort.S1), new Movement());
+				break;
+			default:
+				break;
 		}
-//		ultraTest(US, move);
-//				moveTest(move);
-
 	}
 
-	private static void moveTest(movement move){
+	private void moveTest(Movement move){
 		LCD.drawString("Test", 0, 0);
 		LCD.drawString("Next: Forward", 0, 3);
 		Button.waitForAnyPress();
@@ -78,7 +67,7 @@ public class TestClass {
 		move.stop();
 	}
 	
-	private static void ultraTest(UltrasonicSensor US, movement move){
+	private void ultraTest(UltrasonicSensor US, Movement move){
 		move.forward(FORSPEED);
 		while(US.getDistance() > 20);
 		move.stop();
