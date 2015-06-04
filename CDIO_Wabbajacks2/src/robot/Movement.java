@@ -2,10 +2,13 @@ package robot;
 
 import lejos.nxt.Motor;
 import lejos.nxt.UltrasonicSensor;
+import lejos.robotics.RegulatedMotor;
 
 
 public class Movement implements Runnable{
 	private static int yes = 0;
+	private static RegulatedMotor leftMotor = Motor.A;
+	   private static RegulatedMotor rightMotor = Motor.B;
 	/**
 	 * stop()
 	 * stop the movement of both wheels
@@ -13,7 +16,7 @@ public class Movement implements Runnable{
 	public static void stop(){
 //		Motor.A.stop();
 //		Motor.B.stop();
-		Thread T1 = new Thread(new Movement());
+		/*Thread T1 = new Thread(new Movement());
 		Thread T2 = new Thread(new Movement());
 		new Runnable(
 			void run() {
@@ -24,7 +27,15 @@ public class Movement implements Runnable{
 		yes = 3;
 		T1.run();
 		yes = 4;
-		T2.run();
+		T2.run();*/
+		/* test if the motors stop simultaneously, 
+		 * with and without (true) at Motor B.
+		 * and try the same with the threads.*/
+//		Motor.A.stop(true);
+//		Motor.B.stop();
+	/* test if the below methods stops the motors simultaneously*/	
+		leftMotor.stop(true);
+		rightMotor.stop(true);
 	}
 	private static void stopA(){
 		Motor.A.stop(true);
