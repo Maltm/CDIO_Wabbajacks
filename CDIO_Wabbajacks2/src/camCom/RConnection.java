@@ -9,14 +9,14 @@ import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.comm.*;
 
-public class RobotConnection {
+public class RConnection {
 	private BufferedReader in;
 	private DataOutputStream out;
 	
 	/**
 	 * Class constructor.
 	 */
-	public RobotConnection() {
+	public RConnection() {
 		LCD.drawString("Waiting for device...", 0, 0);
 		
 		NXTConnection conn = Bluetooth.waitForConnection();
@@ -61,6 +61,6 @@ public class RobotConnection {
 	}
 	
 	public static void main(String[] args) {
-		new RobotConnection();
+		new RConnection();
 	}
 }
