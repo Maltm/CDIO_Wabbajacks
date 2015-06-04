@@ -17,9 +17,18 @@ public class TestClass {
 			case 2:
 				ultraTest(new UltrasonicSensor(SensorPort.S1), new Movement());
 				break;
+			case 3:
+				breakTest();
+				break;
 			default:
 				break;
 		}
+	}
+	
+	private void breakTest(){
+		Movement.forward(FORSPEED);
+		Button.waitForAnyPress();
+		Movement.stop();
 	}
 
 	private void moveTest(Movement move){
