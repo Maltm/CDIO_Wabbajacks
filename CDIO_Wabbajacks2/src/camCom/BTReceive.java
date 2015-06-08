@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 
+import robot.Movement;
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
@@ -28,11 +30,35 @@ public class BTReceive {
 			do {
 				s = in.readLine();
 				
-				LCD.clear();
-				LCD.drawString(s, 0, 0);
-				
-				out.writeBytes(s+"\n");
-				out.flush();
+				switch(s) {
+					case "Are you ready?":
+						LCD.clear();
+						LCD.drawString(s, 0, 0);
+						Button.waitForAnyPress();
+						out.writeBytes("yes yes\n");
+						out.flush();
+						break;
+					case "Move forward":
+						LCD.clear();
+						LCD.drawString(s, 0, 0);
+						Movement.forward();
+						Button.waitForAnyPress();
+						Movement.stop();
+						out.writeBytes("Moved forward\n");
+						out.flush();
+						break;
+					case "Move backward":
+						LCD.clear();
+						LCD.drawString(s, 0, 0);
+						Movement.backward();
+						Button.waitForAnyPress();
+						Movement.stop();
+						out.writeBytes("Moved backward\n");
+						out.flush();
+						break;
+					default:
+						break;
+				}
 			} while(!(s.equals("END")));
 			
 			in.close();

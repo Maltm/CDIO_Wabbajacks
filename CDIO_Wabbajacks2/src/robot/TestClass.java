@@ -6,13 +6,11 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 
 public class TestClass {
-	final int FORSPEED = 400;
-	final Movement robotMovement = new Movement();
 	
 	public TestClass(int action) {
 		switch(action) {
 			case 1:
-				moveTest(robotMovement);
+				moveTest();
 				break;
 			case 2:
 				ultraTest(new UltrasonicSensor(SensorPort.S1), new Movement());
@@ -20,18 +18,25 @@ public class TestClass {
 			case 3:
 				breakTest();
 				break;
+			case 4:
+				test4();
+				break;
 			default:
 				break;
 		}
 	}
 	
+	private void test4(){
+		Movement.hardLeft();
+	}
+	
 	private void breakTest(){
-		Movement.forward(FORSPEED);
+		Movement.forward();
 		Button.waitForAnyPress();
 		Movement.stop();
 	}
 
-	private void moveTest(Movement move){
+	private void moveTest(){
 		LCD.drawString("Test", 0, 0);
 		LCD.drawString("Next: Forward", 0, 3);
 		Button.waitForAnyPress();
@@ -39,56 +44,56 @@ public class TestClass {
 		LCD.clear();
 		LCD.drawString("Forward", 0, 0);
 		LCD.drawString("Next: Backwards", 0, 3);
-		move.forward(FORSPEED);
+		Movement.forward();
 		Button.waitForAnyPress();
 
 		LCD.clear();
 		LCD.drawString("Backwards", 0, 0);
 		LCD.drawString("Next: SoftLeft", 0, 3);
-		move.backward(FORSPEED);
+		Movement.backward();
 		Button.waitForAnyPress();
 
 		LCD.clear();
 		LCD.drawString("SoftLeft", 0, 0);
 		LCD.drawString("Next: SoftRight", 0, 3);
-		move.softLeft(FORSPEED);
+		Movement.softLeft();
 		Button.waitForAnyPress();
 
 		LCD.clear();
 		LCD.drawString("SoftRight", 0, 0);
 		LCD.drawString("Next: HardLeft", 0, 3);
-		move.softRight(FORSPEED);
+		Movement.softRight();
 		Button.waitForAnyPress();
 
 		LCD.clear();
 		LCD.drawString("HardLeft", 0, 0);
 		LCD.drawString("Next: HardRight", 0, 3);
-		move.hardLeft(FORSPEED);
+		Movement.hardLeft();
 		Button.waitForAnyPress();
 
 		LCD.clear();
 		LCD.drawString("HardRight", 0, 0);
 		LCD.drawString("Next: Finished", 0, 3);
 		LCD.drawString("Test", 6, 4);
-		move.hardRight(FORSPEED);
+		Movement.hardRight();
 		Button.waitForAnyPress();
 		
-		move.stop();
+		Movement.stop();
 	}
 	
 	private void ultraTest(UltrasonicSensor US, Movement move){
-		move.forward(FORSPEED);
+		Movement.forward();
 		while(US.getDistance() > 20);
-		move.stop();
+		Movement.stop();
 //		Button.waitForAnyPress();
-//		move.backward(FORSPEED);
+//		Movement.backward();
 //		while(US.getDistance() < 20);
 		
-//		move.forward(FORSPEED);
+//		Movement.forward();
 //		Button.waitForAnyPress();
-//		move.stop();
-//		move.hardRight(FORSPEED);
+//		Movement.stop();
+//		Movement.hardRight();
 //		Button.waitForAnyPress();
-//		move.stop();
+//		Movement.stop();
 	}
 }
