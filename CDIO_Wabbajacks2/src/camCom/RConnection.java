@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.comm.*;
 
@@ -14,7 +13,9 @@ public class RConnection {
 	private DataOutputStream out;
 	
 	/**
-	 * Class constructor.
+	 * Class constructor for RConnection.<br><br>
+	 * Will wait for a bluetooth connection to establish. When connection is established<br>
+	 * a test will run where the LCD will print the numbers from 1 to 10 and then end the connection.
 	 */
 	public RConnection() {
 		LCD.drawString("Waiting for device...", 0, 0);
@@ -26,10 +27,8 @@ public class RConnection {
 		in = new BufferedReader(new InputStreamReader(conn.openDataInputStream()));
 		out = new DataOutputStream(conn.openDataOutputStream());
 		
-		Button.waitForAnyPress();
-		
 		try {
-			LCD.drawString("", 0, 0);
+			LCD.drawString("Starting...\n", 0, 0);
 			
 			out.writeBytes("GO\n");
 			
@@ -37,21 +36,23 @@ public class RConnection {
 			int i = 0;
 			
 			while(true) {
-				LCD.drawString(in.readLine(), 0, 0);
-				
-				Button.waitForAnyPress();
-				
-				if(i == 10) break;
-				
-				out.writeBytes(i+"\n");
-				
-				i++;
+				if((s = in.readLine()) != null) {
+					if(i > 10) break;
+					if(s.equals("2345678876trfcvghi765456yu3ijhef")) break;
+					
+					LCD.drawString("Sending: " + i + "\n", 0, 0);
+					
+					out.writeBytes(i+"\n");
+					
+					i++;
+				}
 			}
+			
+			out.writeBytes("END\n");
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		} finally {
 			try {
-				out.writeBytes("END\n");
 				out.close();
 				in.close();
 			} catch(IOException e) {

@@ -1,5 +1,6 @@
 package nxj;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import lejos.pc.comm.NXTInfo;
 public class PCConnection {
 	private String address;
 	private DataOutputStream out;
-	private DataInputStream in;
+	private BufferedReader in;
 	
 	// private final String SHEO_ADDRESS = "00:16:53:0A:71:1B";
 	
@@ -37,14 +38,15 @@ public class PCConnection {
 				System.out.println("Connected to " + this.address);						// Print info
 				
 				out = new DataOutputStream(ncom.getOutputStream());						// Open stream FROM the brick
-				in = new DataInputStream(ncom.getInputStream());						// Open sream TO the brick
-				
-				out.writeBytes("y0000000");												// Test string (send to the brick)
+				in = new BufferedReader(new DataInputStream(ncom.getInputStream()));	// Open sream TO the brick
 				
 				String s = null;														// Instantiate a new string (will hold data FROM the brick)
 				
-				while((s = in.readUTF()) != "END") {									// Keep reading FROM the brick 'till we receive "END"
-					System.out.println(s);												// Print whatever we receive
+				while((s = in.readLine()) != "END") {									// Keep reading FROM the brick 'till we receive "END"
+					if(s.equals("GO"))	System.out.println("Starting...");				// We're live and receiving data
+					else {
+						System.out.println(s);											// Print whatever we receive
+					}
 				}
 			}
 		} catch (NXTCommException e) {
