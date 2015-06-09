@@ -1,5 +1,6 @@
-package robot;
+package tests;
 
+import robot.Movement;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.SensorPort;
