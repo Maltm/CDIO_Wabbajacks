@@ -84,7 +84,7 @@ public class RConn {
 				// Print exception message
 				System.out.println(e.getMessage());
 			} finally {
-				// End communication and close ressources
+				// End communication and close resources
 				try {
 					// Write an ending message to the connected device
 					out.writeBytes("END\n");
