@@ -13,9 +13,9 @@ public class RControl {
 		 * 
 		 * Different commands could execute different moves.
 		 * E.g.
-		 * "C_FW" received: COMMAND FORWARD		perform: Movement.forward
-		 * "C_BW" received: COMMAND BACKWARDS	perform: Movement.backward
-		 * "C_LF" received: COMMAND LEFT		perform: Movement.left
+		 * "CFW" received: COMMAND FORWARD		perform: Movement.forward
+		 * "CBW" received: COMMAND BACKWARDS	perform: Movement.backward
+		 * "CLF" received: COMMAND LEFT			perform: Movement.left
 		 * etc. etc.
 		 * 
 		 * A message could consist of several commands:
