@@ -60,20 +60,30 @@ public class Movement{
 	public static void hardLeft() {
 		if(leftMotor.isMoving()) stop();
 		
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
+		
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
-		leftMotor.rotate(-200, true);
-		rightMotor.rotate(200);
+		leftMotor.rotate(-188, true);
+		rightMotor.rotate(188);
+		stop();
 	}
 	
 	/**
 	 * turn right 90 degrees on the spot
 	 */
 	public static void hardRight() {
+		if(leftMotor.isMoving()) stop();
+		
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
+		
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
-		Motor.B.forward();
-		Motor.A.backward();
+		leftMotor.rotate(178,  true);
+		rightMotor.rotate(-178);
+		stop();
 	}
 	
 	/**

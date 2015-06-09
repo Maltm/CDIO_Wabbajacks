@@ -35,7 +35,7 @@ public class BTReceive {
 						LCD.clear();
 						LCD.drawString(s, 0, 0);
 						Button.waitForAnyPress();
-						out.writeBytes("yes yes\n");
+						out.writeBytes("Runnning\n");
 						out.flush();
 						break;
 					case "Move forward":
