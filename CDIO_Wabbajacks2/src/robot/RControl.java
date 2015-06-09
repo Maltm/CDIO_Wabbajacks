@@ -2,6 +2,7 @@ package robot;
 
 /*
  * Controls the robot overall - movement by command input, sensors etc.
+ * 
  * @author Kristin Hansen
  */
 public class RControl {
