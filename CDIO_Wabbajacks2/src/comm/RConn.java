@@ -59,7 +59,7 @@ public class RConn {
 						
 						String response = rctrl.doCommand(msg);
 						
-						out.writeBytes(response+"\n");
+						out.writeBytes(response + "\n");
 						out.flush();
 						
 						LCD.clear();
