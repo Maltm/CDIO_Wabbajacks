@@ -21,11 +21,11 @@ public class RControl {
 		 * 
 		 * A message could consist of several commands:
 		 * "||C_FW||C_BW||C_BW||C_LF||C_RG||C_FW" could be made into an array by splitting
-		 * 1 -> C_FW
+		 * 0 -> C_FW
+		 * 1 -> C_BW
 		 * 2 -> C_BW
-		 * 3 -> C_BW
+		 * 3...
 		 * 4...
-		 * 5...
 		 * etc. etc.
 		 * 
 		 * The RobotControl should also:
