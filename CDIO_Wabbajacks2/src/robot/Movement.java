@@ -8,7 +8,8 @@ import lejos.robotics.RegulatedMotor;
  * Movement is a controller object which has all the method for controlling the
  * robots motors for movement.
  * All methods in Movement is STATIC and should be accessed in a STATIC way.
- * @author anders
+ * 
+ * @author Anders Bækhøj
  */
 public class Movement{
 	private static int SPEED = 400;
