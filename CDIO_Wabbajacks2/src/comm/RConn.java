@@ -22,12 +22,14 @@ public class RConn {
 	
 	/**
 	 * Class constructor for RConnection.<br><br>
+	 * 
 	 * Will wait for a bluetooth connection to establish. When connection is terminated<br>
 	 * the brick will wait for another connection to establish.<br><br>
 	 * 
-	 * The brick has to be paired with the connecting device BEFORE trying to establish a connection.<br>
-	 * Best and easiest practice is to pair the computer with the brick (search for the brick FROM the computer,<br>
-	 * and do the pairing, by using the pairing PIN configured on the brick. Default: 1 2 3 4).
+	 * The brick has to be paired with the connecting device BEFORE trying to establish<br>
+	 * a connection. Best and easiest practice is to pair the computer with<br>
+	 * the brick (search for the brick FROM the computer, and do the pairing<br>
+	 * by using the pairing PIN configured on the brick. Default: 1 2 3 4).
 	 */
 	public RConn() {
 		while (true) {
