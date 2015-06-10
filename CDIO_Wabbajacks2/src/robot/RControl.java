@@ -2,6 +2,7 @@ package robot;
 
 import java.util.ArrayList;
 
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.util.Delay;
 
@@ -49,10 +50,20 @@ public class RControl {
 	public String doCommand(String msg) {
 		String[] cmdList = prepCmds(msg);
 		
+		long a = System.currentTimeMillis();
+		
 		for(int i = 0; i < cmdList.length; i++) {
 			doMovement(cmdList[i], cmdList[i+1]);
 			i++;
 		}
+		
+		long b = System.currentTimeMillis();
+		
+		String c = String.valueOf((b-a));
+		
+		LCD.clear();
+		LCD.drawString(c, 0, 0);
+		Button.waitForAnyPress();
 		
 		Movement.stop();
 		

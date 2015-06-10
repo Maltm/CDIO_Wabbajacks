@@ -52,8 +52,12 @@ public class Movement{
 	 * start backwards movement
 	 */
 	public static void backward() {
+		leftMotor.setAcceleration(600);
+		rightMotor.setAcceleration(600);
+		
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
+		
 		leftMotor.backward();
 		rightMotor.backward();
 	}

@@ -85,6 +85,8 @@ public class RConn {
 						// Print the response on the display
 						LCD.clear();
 						LCD.drawString("RConn sending:\n" + response, 0, 0);
+						Button.waitForAnyPress();
+						LCD.clear();
 					}
 				}
 			} catch (IOException e) {
