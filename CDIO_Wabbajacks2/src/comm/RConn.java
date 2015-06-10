@@ -32,6 +32,7 @@ public class RConn {
 	 * by using the pairing PIN configured on the brick. Default: 1 2 3 4).
 	 */
 	public RConn() {
+		// Will wait for connection. When this connection is ended, a new connection can be established (hence the while-loop)
 		while (true) {
 			// Print a string on the display, indicating that RConn has been instantiated
 			LCD.drawString("Waiting for device...", 0, 0);
