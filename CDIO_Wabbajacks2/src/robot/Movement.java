@@ -38,6 +38,9 @@ public class Movement{
 	 * starts forward movement 
 	 */
 	public static void forward() {
+		leftMotor.setAcceleration(200);
+		rightMotor.setAcceleration(200);
+		
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
 		
