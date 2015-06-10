@@ -44,8 +44,6 @@ public class RControl {
 		 *   iiii:	"ERROR<msg>" if something went wrong, but couldn't be (msg = some error code or something alike)
 		 *   
 		 */
-		
-		
 	}
 	
 	public String doCommand(String msg) {
