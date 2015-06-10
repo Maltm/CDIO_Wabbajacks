@@ -38,8 +38,8 @@ public class Movement{
 	 * starts forward movement 
 	 */
 	public static void forward() {
-		leftMotor.setAcceleration(200);
-		rightMotor.setAcceleration(200);
+		leftMotor.setAcceleration(600);
+		rightMotor.setAcceleration(600);
 		
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
@@ -69,8 +69,8 @@ public class Movement{
 		
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
-		leftMotor.rotate(-188, true);
-		rightMotor.rotate(188);
+		leftMotor.rotate(-180, true);
+		rightMotor.rotate(180);
 		stop();
 	}
 	
@@ -85,8 +85,8 @@ public class Movement{
 		
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
-		leftMotor.rotate(178,  true);
-		rightMotor.rotate(-178);
+		leftMotor.rotate(180,  true);
+		rightMotor.rotate(-180);
 		stop();
 	}
 	
