@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import robot.RControl;
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.comm.*;
 
@@ -32,6 +33,8 @@ public class RConn {
 	 * by using the pairing PIN configured on the brick. Default: 1 2 3 4).
 	 */
 	public RConn() {
+		rctrl = new RControl();
+		
 		// Will wait for connection. When this connection is ended, a new connection can be established (hence the while-loop)
 		while (true) {
 			// Print a string on the display, indicating that RConn has been instantiated
@@ -69,7 +72,8 @@ public class RConn {
 						// ... print received command
 						// TODO If a series of commands are received don't print them all (maybe print the amount of commands?)
 						LCD.clear();
-						LCD.drawString("RConn received:\n" + msg, 0, 0);
+						LCD.drawString("RConn received:\n" + msg.length() + "\nlong commandline", 0, 0);
+						Button.waitForAnyPress();
 						
 						// ... send the command to the robot controller and prepare a response
 						String response = rctrl.doCommand(msg);
