@@ -9,6 +9,7 @@ import robot.RControl;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.comm.*;
+import lejos.util.Delay;
 
 /*
  * Controls the connection FROM the brick TO the incoming connection.
@@ -72,8 +73,8 @@ public class RConn {
 						// ... print received command
 						// TODO If a series of commands are received don't print them all (maybe print the amount of commands?)
 						LCD.clear();
-						LCD.drawString("RConn received:\n" + msg.length() + "\nlong commandline", 0, 0);
-						Button.waitForAnyPress();
+						LCD.drawString("Received command\nTrying to execute...", 0, 0);
+						Delay.msDelay(1000);
 						
 						// ... send the command to the robot controller and prepare a response
 						String response = rctrl.doCommand(msg);
@@ -84,8 +85,9 @@ public class RConn {
 						
 						// Print the response on the display
 						LCD.clear();
-						LCD.drawString("RConn sending:\n" + response, 0, 0);
-						Button.waitForAnyPress();
+						LCD.drawString("Reply:\n" + response, 0, 0);
+						Delay.msDelay(1000);
+						
 						LCD.clear();
 					}
 				}
