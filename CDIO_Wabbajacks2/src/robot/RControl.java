@@ -109,8 +109,17 @@ public class RControl {
 	 * @return A string with the commands and their timeframes.
 	 */
 	private String prepStr(String[] cmdList, int start) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String list = "||";
+		for(int i = 0; i < cmdList.length; i++){
+			list += cmdList[i];
+			list += ";;";
+			list += cmdList[i+1];
+			list += "||";
+			i++;
+		}
+		
+		return list;
 	}
 
 	/**
