@@ -2,7 +2,7 @@ package robot.utils;
 
 import java.util.ArrayList;
 
-public class PrepareCommands {
+public class PrepareStatements {
 	/**
 	 * Takes a string and converts it into a list of commands and timeframes.<br>
 	 * "||" is used as delimiter. ";;" is used to recognize the command from the timeframe.<br><br>
