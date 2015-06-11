@@ -12,6 +12,8 @@ import lejos.util.Delay;
  */
 
 public class RControl {
+	private String response = null;
+	
 	public RControl() {
 		/* TODO
 		 * This is the controller which the RConn parses commands to.
@@ -67,10 +69,18 @@ public class RControl {
 	public String doCommand(String msg) {
 		String[] cmdList = prepCmds(msg);
 		
-		for(int i = 0; i < cmdList.length; i++) {
-			doMovement(cmdList[i], cmdList[i+1]);
-			i++;
+		int i = 0;
+		
+		try {
+			for(; i < cmdList.length; i++) {
+				doMovement(cmdList[i], cmdList[i+1]);
+				
+				i++;
+			}
+		} catch(Exception e) {
+			response = prepStr(cmdList, i);
 		}
+		
 		
 		// Stop moving
 		Movement.stop();
@@ -78,6 +88,31 @@ public class RControl {
 		return "COMPLETE";
 	}
 	
+	/**
+	 * Takes an array of commands with their respective timeframes and converts them into a string.<br><br>
+	 * 
+	 * The layout of the array must be commands in the even index numbers, while the trailing odd index is<br>
+	 * the command's timeframe.<br><br>
+	 * 
+	 * E.g.
+	 * <ul>
+	 * <li><code>[0] -> cmd, [1] -> timeframe</code></li>
+	 * <li><code>[2] -> cmd, [2] -> timeframe</code></li>
+	 * </ul>
+	 * 
+	 * The returned string must be with the format:<br><br>
+	 * <code>"||cmd;;timeframe||cmd;;timeframe||etc...||"</code><br><br>
+	 * The string will always start with "||" and end with "||" and a command and its timeframe will always be separated by ";;".
+	 * 
+	 * @param cmdList An array containing the commands and their respective timeframes.
+	 * @param start The start index of the given array.
+	 * @return A string with the commands and their timeframes.
+	 */
+	private String prepStr(String[] cmdList, int start) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * Method which takes a command and executes it within the given timeframe.
 	 * 
