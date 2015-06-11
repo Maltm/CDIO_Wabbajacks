@@ -1,20 +1,24 @@
 package robot;
 
-import java.util.TimerTask;
-
+import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 
-public class SonarControl extends TimerTask {
-	private UltrasonicSensor sonar;
+public class SonarControl implements Runnable {
+	private UltrasonicSensor sonar = new UltrasonicSensor(SensorPort.S1);
+	private Thread cmdThread;
+	private volatile boolean running;
 	
-	public SonarControl(UltrasonicSensor sonar) {
-		this.sonar = sonar;
+	public SonarControl(Thread cmdThread) {
+		this.cmdThread = cmdThread;
 	}
 	
 	@Override
 	public void run() {
-		if(sonar.getDistance() > 8) {
-			Movement.stop();
+		while(running) {
+			if(sonar.getDistance() < 13)
+				running = false;
 		}
+		
+		cmdThread.interrupt();
 	}
 }

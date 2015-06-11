@@ -55,7 +55,6 @@ public class PrepareStatements {
 	 * </ul>
 	 * 
 	 * @param msg String containing the commands and their timeframes.
-	 * @return 
 	 * @return An array containing the command and its timeframe in the following array index.
 	 */
 	public static String[] prepCmds(String msg) {

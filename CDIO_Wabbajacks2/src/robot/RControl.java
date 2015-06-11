@@ -18,8 +18,7 @@ import lejos.util.Delay;
 public class RControl extends TimerTask {
 	private String response;
 	private int cmdsExecuted;
-	private UltrasonicSensor sonar;
-	private Thread exe;
+	private Thread cmdThread;
 	
 	/**
 	 * RControl class constructor.
@@ -51,9 +50,6 @@ public class RControl extends TimerTask {
 		
 		// Reset command counter
 		cmdsExecuted = 0;
-		
-		// Instantiate sonar
-		sonar = new UltrasonicSensor(SensorPort.S1);
 
 		String[] cmdList = PrepareStatements.prepCmds(msg);
 		
@@ -127,22 +123,5 @@ public class RControl extends TimerTask {
 				// Throw exception
 				throw new IllegalArgumentException("command not regocnised");
 		}
-	}
-	
-	/**
-	 * This runnable will keep track of whether or not the robot is too close to the wall.
-	 */
-	@Override
-	public void run() {
-		if(sonar.getDistance() < 8)
-			stopCommands();
-	}
-	
-	/**
-	 * Will stop the 
-	 */
-	private void stopCommands() {
-		// TODO Auto-generated method stub
-		
 	}
 }
