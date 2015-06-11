@@ -15,7 +15,6 @@ public class Movement{
 	private static int SPEED = 400;
 	private static RegulatedMotor rightMotor = Motor.A;
 	private static RegulatedMotor leftMotor = Motor.B;
-	
 	/**
 	 * stop()
 	 * stop the movement of both wheels instant
