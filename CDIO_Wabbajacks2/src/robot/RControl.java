@@ -1,8 +1,12 @@
 package robot;
 
-import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import robot.utils.PrepareStatements;
 import lejos.nxt.LCD;
+import lejos.nxt.SensorPort;
+import lejos.nxt.UltrasonicSensor;
 import lejos.util.Delay;
 
 /*
@@ -11,42 +15,17 @@ import lejos.util.Delay;
  * @author Kristin Hansen
  */
 
-public class RControl {
-	private String response = null;
+public class RControl extends TimerTask {
+	private String response;
+	private int cmdsExecuted;
+	private UltrasonicSensor sonar;
+	private Thread exe;
 	
+	/**
+	 * RControl class constructor.
+	 * 
+	 */
 	public RControl() {
-		/* TODO
-		 * This is the controller which the RConn parses commands to.
-		 * 
-		 * Should have some kind of switch-case.
-		 * 
-		 * Different commands could execute different moves.
-		 * E.g.
-		 * "CFW" received: COMMAND FORWARD		perform: Movement.forward
-		 * "CBW" received: COMMAND BACKWARDS	perform: Movement.backward
-		 * "CLF" received: COMMAND LEFT			perform: Movement.left
-		 * etc. etc.
-		 * 
-		 * A message could consist of several commands with timeframes:
-		 * "||C_FW;;2500||C_BW;;450||C_BW;;1000||C_LF;;400||C_RG;;3400||C_FW;;2150" could be made into an array by splitting
-		 * 0 -> C_FW
-		 * 1 -> C_BW
-		 * 2 -> C_BW
-		 * 3...
-		 * 4...
-		 * etc. etc.
-		 * 
-		 * The RobotControl should also:
-		 *  a:	have contact with the us-sensor, and halt any and all commands currently being executed, if
-		 *   i:		sensor's values become greater than 1 ("DANGER CLOSE")
-		 *   ii:	sensor is unresponsive ("ERROR")
-		 *  b:	be able to return a "COMPLETE"-, "INCOMPLETE<msg>"-, "DNGCLOSE"- OR "ERROR"-command
-		 *   i:		"COMPLETE" if everything has been executed without any errors
-		 *   ii:	"INCOMPLETE<msg>" if some commands couldn't be executed (msg = "||1st_cmd_not_exe||2nd_cmd_not_exe||etc.")
-		 *   iii:	"DNGCLOSE" if US-sensor reacts to "danger close" walls
-		 *   iiii:	"ERROR<msg>" if something went wrong, but couldn't be (msg = some error code or something alike)
-		 *   
-		 */
 	}
 	
 	/**
@@ -63,63 +42,45 @@ public class RControl {
 	 * <li>"ERROR&lt;msg&gt; - if something went wrong but coldn't be determined. "msg" will contain the remaining none-executed commands."</li>
 	 * </ul>
 	 * 
-	 * @param msg
-	 * @return
+	 * @param msg List of commands to be executed.
+	 * @return Whether or not the series of commands were executed.
 	 */
 	public String doCommand(String msg) {
-		String[] cmdList = prepCmds(msg);
+		// We start with setting the response string to ERROR - if nothing is done/executed (something went wrong) this will be returned.
+		response = "ERROR<unknown>";
 		
-		int i = 0;
+		// Reset command counter
+		cmdsExecuted = 0;
+		
+		// Instantiate sonar
+		sonar = new UltrasonicSensor(SensorPort.S1);
+
+		String[] cmdList = PrepareStatements.prepCmds(msg);
 		
 		try {
-			for(; i < cmdList.length; i++) {
-				doMovement(cmdList[i], cmdList[i+1]);
+			for(; cmdsExecuted < cmdList.length; cmdsExecuted++) {
+				// Execute command
+				doMovement(cmdList[cmdsExecuted], cmdList[cmdsExecuted+1]);
 				
-				i++;
+				// We count an extra time to skip timeframe
+				cmdsExecuted++;
 			}
+			
+			// If we reach this part everything has completed successfully
+			response = "COMPLETE";
+			
+		} catch(IllegalArgumentException e) {
+			// If a command wasn't recognized prepare response with INCOMPLETE and add the remaining commands
+			response = "INCOMPLETE<" + PrepareStatements.prepStr(cmdList, cmdsExecuted) + ">";
 		} catch(Exception e) {
-			response = prepStr(cmdList, i);
+			// If an unknown error occurs prepare response with ERROR and add the remaining commands
+			response = "ERROR<" + PrepareStatements.prepStr(cmdList, cmdsExecuted) + ">";
 		}
 		
-		
-		// Stop moving
+		// We make sure nothing is moving before returning
 		Movement.stop();
 		
-		return "COMPLETE";
-	}
-	
-	/**
-	 * Takes an array of commands with their respective timeframes and converts them into a string.<br><br>
-	 * 
-	 * The layout of the array must be commands in the even index numbers, while the trailing odd index is<br>
-	 * the command's timeframe.<br><br>
-	 * 
-	 * E.g.
-	 * <ul>
-	 * <li><code>[0] -> cmd, [1] -> timeframe</code></li>
-	 * <li><code>[2] -> cmd, [2] -> timeframe</code></li>
-	 * </ul>
-	 * 
-	 * The returned string must be with the format:<br><br>
-	 * <code>"||cmd;;timeframe||cmd;;timeframe||etc...||"</code><br><br>
-	 * The string will always start with "||" and end with "||" and a command and its timeframe will always be separated by ";;".
-	 * 
-	 * @param cmdList An array containing the commands and their respective timeframes.
-	 * @param start The start index of the given array.
-	 * @return A string with the commands and their timeframes.
-	 */
-	private String prepStr(String[] cmdList, int start) {
-		
-		String list = "||";
-		for(int i = 0; i < cmdList.length; i++){
-			list += cmdList[i];
-			list += ";;";
-			list += cmdList[i+1];
-			list += "||";
-			i++;
-		}
-		
-		return list;
+		return response;
 	}
 
 	/**
@@ -128,7 +89,7 @@ public class RControl {
 	 * @param cmd the command which the brick is supposed to perform.
 	 * @param timeframe for how long is the command supposed to run. Unit is given in milliseconds.
 	 */
-	private void doMovement(String cmd, String timeframe) {
+	private void doMovement(String cmd, String timeframe) throws IllegalArgumentException {
 		switch(cmd) {
 			case "C_FW":
 				Movement.forward();
@@ -162,46 +123,26 @@ public class RControl {
 				LCD.clear();
 				LCD.drawString("Command not recognised", 0, 0);
 				Delay.msDelay(1000);
+				
+				// Throw exception
+				throw new IllegalArgumentException("command not regocnised");
 		}
 	}
 	
 	/**
-	 * Takes a string and converts it into a list of commands and timeframes.<br>
-	 * "||" is used as delimiter. ";;" is used to recognize the command from the timeframe.<br><br>
-	 * 
-	 * The string format must be:<br>
-	 * "||cmd;;timeframe||cmd;;timeframe||etc...||"<br>
-	 * The string must start with "||" and end with "||"<br><br>
-	 * 
-	 * The returned array is given as a command in the even index numbers<br>
-	 * with the timeframe for the command in the following odd index number.<br>
-	 * E.g.:
-	 * 
-	 * <ul>
-	 * <li>[0] -> "C_FW", [1] -> "5000"</li>
-	 * <li>[2] -> "C_HL", [3] -> "0"</li>
-	 * </ul>
-	 * 
-	 * @param msg String containing the commands and their timeframes.
-	 * @return An array containing the command and its timeframe in the following array index.
+	 * This runnable will keep track of whether or not the robot is too close to the wall.
 	 */
-	private String[] prepCmds(String msg) {
-		ArrayList<String> res = new ArrayList<String>();
+	@Override
+	public void run() {
+		if(sonar.getDistance() < 8)
+			stopCommands();
+	}
+	
+	/**
+	 * Will stop the 
+	 */
+	private void stopCommands() {
+		// TODO Auto-generated method stub
 		
-		int start = 0;
-		
-		while(start < msg.lastIndexOf("||")) {
-			int i = msg.indexOf(";;", start);
-			int j = msg.indexOf("||", i);
-			
-			if(i != -1) {
-				res.add(msg.substring((start+2), i));
-				res.add(msg.substring((i+2), j));
-				
-				start = msg.indexOf("||", i);
-			}
-		}
-		
-		return res.toArray(new String[res.size()]);
 	}
 }
