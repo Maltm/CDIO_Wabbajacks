@@ -1,12 +1,7 @@
 package robot;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import robot.utils.PrepareStatements;
 import lejos.nxt.LCD;
-import lejos.nxt.SensorPort;
-import lejos.nxt.UltrasonicSensor;
 import lejos.util.Delay;
 
 /*
@@ -15,10 +10,9 @@ import lejos.util.Delay;
  * @author Kristin Hansen
  */
 
-public class RControl extends TimerTask {
+public class RControl {
 	private String response;
-	private int cmdsExecuted;
-	private Thread cmdThread;
+	private Thread cmd;
 	
 	/**
 	 * RControl class constructor.
@@ -48,80 +42,27 @@ public class RControl extends TimerTask {
 		// We start with setting the response string to ERROR - if nothing is done/executed (something went wrong) this will be returned.
 		response = "ERROR<unknown>";
 		
-		// Reset command counter
-		cmdsExecuted = 0;
-
-		String[] cmdList = PrepareStatements.prepCmds(msg);
+		// Start executing commands
+		cmd = new Thread(new MControl(this, msg));
 		
-		try {
-			for(; cmdsExecuted < cmdList.length; cmdsExecuted++) {
-				// Execute command
-				doMovement(cmdList[cmdsExecuted], cmdList[cmdsExecuted+1]);
-				
-				// We count an extra time to skip timeframe
-				cmdsExecuted++;
-			}
-			
-			// If we reach this part everything has completed successfully
-			response = "COMPLETE";
-			
-		} catch(IllegalArgumentException e) {
-			// If a command wasn't recognized prepare response with INCOMPLETE and add the remaining commands
-			response = "INCOMPLETE<" + PrepareStatements.prepStr(cmdList, cmdsExecuted) + ">";
-		} catch(Exception e) {
-			// If an unknown error occurs prepare response with ERROR and add the remaining commands
-			response = "ERROR<" + PrepareStatements.prepStr(cmdList, cmdsExecuted) + ">";
-		}
+		Thread sonar = new Thread(new SonarControl(cmd));
 		
-		// We make sure nothing is moving before returning
+		cmd.start();
+		sonar.start();
+		
+		while(cmd.isAlive()) System.out.println("waiting...");
+		
+		// Stop any movement if some command didn't stop the motors
 		Movement.stop();
 		
 		return response;
 	}
+	
+	public String getResponse() {
+		return response;
+	}
 
-	/**
-	 * Method which takes a command and executes it within the given timeframe.
-	 * 
-	 * @param cmd the command which the brick is supposed to perform.
-	 * @param timeframe for how long is the command supposed to run. Unit is given in milliseconds.
-	 */
-	private void doMovement(String cmd, String timeframe) throws IllegalArgumentException {
-		switch(cmd) {
-			case "C_FW":
-				Movement.forward();
-				LCD.clear();
-				LCD.drawString("FORWARD", 0, 0);
-				Delay.msDelay(Long.parseLong(timeframe));
-				Movement.stop();
-				break;
-			case "C_BW":
-				Movement.backward();
-				LCD.clear();
-				LCD.drawString("BACKWARDS", 0, 0);
-				Delay.msDelay(Long.parseLong(timeframe));
-				Movement.stop();
-				break;
-			case "C_HL":
-				Movement.hardLeft();
-				LCD.clear();
-				LCD.drawString("HARDLEFT", 0, 0);
-				Delay.msDelay(Long.parseLong(timeframe));
-				Movement.stop();
-				break;
-			case "C_HR":
-				Movement.hardRight();
-				LCD.clear();
-				LCD.drawString("HARDRIGHT", 0, 0);
-				Delay.msDelay(Long.parseLong(timeframe));
-				Movement.stop();
-				break;
-			default:
-				LCD.clear();
-				LCD.drawString("Command not recognised", 0, 0);
-				Delay.msDelay(1000);
-				
-				// Throw exception
-				throw new IllegalArgumentException("command not regocnised");
-		}
+	public void setResponse(String response) {
+		this.response = response;
 	}
 }

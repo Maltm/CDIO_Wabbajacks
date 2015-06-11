@@ -10,6 +10,7 @@ public class SonarControl implements Runnable {
 	
 	public SonarControl(Thread cmdThread) {
 		this.cmdThread = cmdThread;
+		running = true;
 	}
 	
 	@Override
