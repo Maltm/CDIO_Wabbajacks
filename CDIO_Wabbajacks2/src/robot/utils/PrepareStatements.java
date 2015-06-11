@@ -23,7 +23,7 @@ public class PrepareStatements {
 	 * @param start The start index of the given array.
 	 * @return A string with the commands and their timeframes.
 	 */
-	private String prepStr(String[] cmdList, int start) {
+	public static String prepStr(String[] cmdList, int start) {
 		
 		String list = "||";
 		for(int i = 0; i < cmdList.length; i++){
