@@ -33,7 +33,7 @@ public class MoveControl extends Thread {
 	}
 	
 	/**
-	 * Will run prepare a command list from the given message, and start executing these.<br>
+	 * Will prepare a command {@link PrepareStatements#prepStr(String[], int)} list from the given message and start executing this list of commands.<br>
 	 * A response will be prepared and can be read upon completion (use Thread.join to get notice of when the thread is done working.)
 	 */
 	@Override

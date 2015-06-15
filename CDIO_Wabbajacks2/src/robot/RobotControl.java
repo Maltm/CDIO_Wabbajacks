@@ -47,7 +47,7 @@ public class RobotControl extends Thread {
 			if(!sonar.isRunning()) {
 				Movement.stop();
 				
-				response = "DNGCLOSE<" + cmd.getPreppedMsg() + ">";
+				//response = "DNGCLOSE<" + cmd.getPreppedMsg() + ">";
 				
 				Movement.backward();
 				Thread.sleep(1500);
