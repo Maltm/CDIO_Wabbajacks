@@ -1,25 +1,14 @@
 package robot;
 
-import robot.utils.PrepareStatements;
-import lejos.nxt.LCD;
-import lejos.util.Delay;
-
 /*
  * Controls the robot overall - movement by command input, sensors etc.
  * 
  * @author Kristin Hansen
  */
 
-public class RControl {
-	private String response;
-	private Thread cmd;
-	
-	/**
-	 * RControl class constructor.
-	 * 
-	 */
-	public RControl() {
-	}
+public class RobotControl extends Thread {
+	private MoveControl cmd;
+	private SonarControl sonar;
 	
 	/**
 	 * Takes a set of commands and executes them.<br><br>
@@ -39,30 +28,40 @@ public class RControl {
 	 * @return Whether or not the series of commands were executed.
 	 */
 	public String doCommand(String msg) {
-		// We start with setting the response string to ERROR - if nothing is done/executed (something went wrong) this will be returned.
-		response = "ERROR<unknown>";
+		// Instantiate a response string - default will be "ERROR"
+		String response = "ERROR<unknown>";
 		
-		// Start executing commands
-		cmd = new Thread(new MControl(this, msg));
-		
-		Thread sonar = new Thread(new SonarControl(cmd));
-		
-		cmd.start();
-		sonar.start();
-		
-		while(cmd.isAlive()) System.out.println("waiting...");
-		
-		// Stop any movement if some command didn't stop the motors
-		Movement.stop();
+		try {
+			// Instantiate thread objects
+			cmd = new MoveControl(msg);
+			sonar = new SonarControl(cmd);
+			
+			// Start run-methods
+			sonar.start();
+			cmd.start();
+			
+			// Wait for "cmd"-thread to end
+			cmd.join();
+			
+			// Check if cmd thread completed without interruption
+			if(!sonar.isRunning()) {
+				Movement.stop();
+				
+				response = "DNGCLOSE<" + cmd.getPreppedMsg() + ">";
+				
+				Movement.backward();
+				Thread.sleep(1500);
+			}
+			
+			// Get the computed response
+			response = cmd.getResponse();
+			
+			// Stop any movement if some command didn't stop the motors
+			Movement.stop();
+		} catch (InterruptedException e) {
+			response = "ERROR<interruptedException>";
+		}
 		
 		return response;
-	}
-	
-	public String getResponse() {
-		return response;
-	}
-
-	public void setResponse(String response) {
-		this.response = response;
 	}
 }

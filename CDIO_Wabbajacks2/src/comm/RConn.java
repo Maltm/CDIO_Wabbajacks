@@ -5,11 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import robot.RControl;
-import lejos.nxt.Button;
+import robot.RobotControl;
 import lejos.nxt.LCD;
-import lejos.nxt.comm.*;
-import lejos.util.Delay;
+import lejos.nxt.comm.Bluetooth;
+import lejos.nxt.comm.NXTConnection;
 
 /*
  * Controls the connection FROM the brick TO the incoming connection.
@@ -20,7 +19,9 @@ import lejos.util.Delay;
 public class RConn {
 	private BufferedReader in;
 	private DataOutputStream out;
-	private RControl rctrl;
+	private RobotControl rctrl;
+	private boolean connected;
+	
 	
 	/**
 	 * Class constructor for RConnection.<br><br>
@@ -33,82 +34,77 @@ public class RConn {
 	 * the brick (search for the brick FROM the computer, and do the pairing<br>
 	 * by using the pairing PIN configured on the brick. Default: 1 2 3 4).
 	 */
-	public RConn() {
-		rctrl = new RControl();
-		
+	public RConn() {		
 		// Will wait for connection. When this connection is ended, a new connection can be established (hence the while-loop)
 		while (true) {
+			this.rctrl = new RobotControl();
+			this.connected = false;
+			
 			// Print a string on the display, indicating that RConn has been instantiated
-			LCD.drawString("Waiting for device...", 0, 0);
+			LCD.clear();
+			LCD.drawString("Waiting...", 0, 0);
 			
 			// Open a bluetooth connection and wait for a device to connect
 			NXTConnection conn = Bluetooth.waitForConnection();
 			
-			// When a device has connected print its address on the display 
-			LCD.clear();
-			LCD.drawString("Connected to:\n" + conn.getAddress(), 0, 0);
+			// When a device has connected print its address on the display
+			LCD.drawString("Connected to:\n" + conn.getAddress(), 0, 1);
 			
 			// Open streams for communication
-			in = new BufferedReader(new InputStreamReader(conn.openDataInputStream()));
-			out = conn.openDataOutputStream();
+			this.in = new BufferedReader(new InputStreamReader(conn.openDataInputStream()));
+			this.out = conn.openDataOutputStream();
+			
+			// If streams are open set set connected to true
+			if(this.in != null && this.out != null)	this.connected = true;
 			
 			try {
-				// Print a "ready"-message on the display, indicating that the brick is ready for commands
-				LCD.clear();
-				LCD.drawString("Ready for commands.", 0, 0);
-				
-				// Write to the connected device that the brick is ready
-				out.writeBytes("READY\n");
-				out.flush();
-				
 				// Buffer string
 				String msg = null;
 				
-				while(true) {
+				while(this.connected) {
 					// If the string is anything but NULL...
-					if((msg = in.readLine()) != null) {
+					if((msg = this.in.readLine()) != null) {
 						// ... and NOT "END"
-						if(msg.equals("END")) break;						
-						
-						// ... print received command
-						// TODO If a series of commands are received don't print them all (maybe print the amount of commands?)
-						LCD.clear();
-						LCD.drawString("Received command\nTrying to execute...", 0, 0);
-						Delay.msDelay(1000);
+						if(msg.equals("END")) {
+							this.connected = false;
+							break;
+						}
 						
 						// ... send the command to the robot controller and prepare a response
-						String response = rctrl.doCommand(msg);
+						String response = this.rctrl.doCommand(msg);
 						
 						// Write the response back to the connected device
-						out.writeBytes(response + "\n");
-						out.flush();
+						this.out.writeBytes(response + "\n");
+						this.out.flush();
 						
 						// Print the response on the display
 						LCD.clear();
 						LCD.drawString("Reply:\n" + response, 0, 0);
-						Delay.msDelay(1000);
 						
 						LCD.clear();
 					}
 				}
 			} catch (IOException e) {
-				// Print exception message
-				System.out.println(e.getMessage());
+				// TODO
 			} finally {
 				// End communication and close resources
 				try {
 					// Write an ending message to the connected device
-					out.writeBytes("END\n");
-					out.flush();
+					this.out.writeBytes("END\n");
+					this.out.flush();
 					
 					// Close resources
-					out.close();
-					in.close();
+					this.out.close();
+					this.in.close();
 					conn.close();
+					
+					this.rctrl = null;
 				} catch(IOException e) {
 					System.out.println(e.getMessage());
 				}
 			}
+			
+			System.gc();
 		}
 	}
 	

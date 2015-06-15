@@ -24,9 +24,9 @@ public class PrepareStatements {
 	 * @return A string with the commands and their timeframes.
 	 */
 	public static String prepStr(String[] cmdList, int start) {
-		
 		String list = "||";
-		for(int i = 0; i < cmdList.length; i++){
+		
+		for(int i = start; i < cmdList.length; i++){
 			list += cmdList[i];
 			list += ";;";
 			list += cmdList[i+1];
@@ -50,8 +50,10 @@ public class PrepareStatements {
 	 * E.g.:
 	 * 
 	 * <ul>
-	 * <li>[0] -> "C_FW", [1] -> "5000"</li>
-	 * <li>[2] -> "C_HL", [3] -> "0"</li>
+	 * <li>[0] -> "C_FW"</li>
+	 * <li>[1] -> "5000"</li>
+	 * <li>[2] -> "C_HL"</li>
+	 * <li>[3] -> "0"</li>
 	 * </ul>
 	 * 
 	 * @param msg String containing the commands and their timeframes.
@@ -59,7 +61,7 @@ public class PrepareStatements {
 	 */
 	public static String[] prepCmds(String msg) {
 		ArrayList<String> res = new ArrayList<String>();
-		
+
 		int start = 0;
 		
 		while(start < msg.lastIndexOf("||")) {
