@@ -34,7 +34,7 @@ public class RConn {
 	 * the brick (search for the brick FROM the computer, and do the pairing<br>
 	 * by using the pairing PIN configured on the brick. Default: 1 2 3 4).
 	 */
-	public RConn() {		
+	public RConn() {
 		// Will wait for connection. When this connection is ended, a new connection can be established (hence the while-loop)
 		while (true) {
 			this.rctrl = new RobotControl();

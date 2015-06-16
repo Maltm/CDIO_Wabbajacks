@@ -19,6 +19,9 @@ public class MoveControl extends Thread {
 	private String[] cmdList;
 	private int cmdsExecuted;
 	
+	// DEFAULTS
+	private static final long HARD_TURN_TIME_FRAME = 1200;
+	
 	/**
 	 * MoveControl class constructor. Takes a single parameter (if there's no message, there's no commands to execute - nothing will be done).<br>
 	 * The format of message must be "||CMD;;TIME FRAME||CMD;;TIME FRAME||etc...||".<br>
@@ -81,41 +84,96 @@ public class MoveControl extends Thread {
 	private void doMovement(String cmd, String timeframe) throws InterruptedException, IllegalArgumentException {
 		switch(cmd) {
 			case "C_FW":
+				// Do movement
 				Movement.forward();
+				
+				// Note movement on display
 				LCD.clear();
 				LCD.drawString("FORWARD", 0, 0);
-				Thread.sleep(Long.parseLong(timeframe));
-				LCD.clear();
+				
+				// If time frame is equals 0, let the brick run for 1 minute straight or let the sensor stop the brick.
+				// ... or do the movement within the time frame
+				if(Long.parseLong(timeframe) <= 0) Thread.sleep(60000);
+				else Thread.sleep(Long.parseLong(timeframe));
+				
+				// Stop movement
 				Movement.stop();
+				
+				// Remove movement from display
+				LCD.clear();
+				
+				// Minor fix
+				Thread.sleep(100);
 				break;
 			case "C_BW":
+				// Do movement
 				Movement.backward();
+				
+				// Note movement on display
 				LCD.clear();
 				LCD.drawString("BACKWARDS", 0, 0);
+				
+				// Check if time frame is less than 1 miliseconds (in reality it won't move the brick, but we're just making sure that the brick won't move backwards infinitely)
+				if(Long.parseLong(timeframe) < 1) throw new IllegalArgumentException("time frame for backwards cannot be less than 1");
+					
+				// Keep doing the movement within the time frame
 				Thread.sleep(Long.parseLong(timeframe));
-				LCD.clear();
+				
+				// Stop movement
 				Movement.stop();
+				
+				// Remove movement from display
+				LCD.clear();
+				
+				// Minor fix
+				Thread.sleep(100);
 				break;
 			case "C_HL":
+				// Do movement
 				Movement.hardLeft();
+				
+				// Note movement on display
 				LCD.clear();
 				LCD.drawString("HARDLEFT", 0, 0);
-				Thread.sleep(Long.parseLong(timeframe));
-				LCD.clear();
+				
+				// We force HARD_TURN time limit if the time frame is less or equal to the minimum time for a HARD_TURN
+				if(Long.parseLong(timeframe) <= HARD_TURN_TIME_FRAME) Thread.sleep(HARD_TURN_TIME_FRAME);
+				else Thread.sleep(Long.parseLong(timeframe));
+				
+				// Stop movement
 				Movement.stop();
+				
+				// Remove movement from display
+				LCD.clear();
+				
+				// Minor fix
+				Thread.sleep(100);
 				break;
 			case "C_HR":
+				// Do movement
 				Movement.hardRight();
+				
+				// Note movement on display
 				LCD.clear();
 				LCD.drawString("HARDRIGHT", 0, 0);
-				Thread.sleep(Long.parseLong(timeframe));
-				LCD.clear();
+				
+				// We force HARD_TURN time limit if the time frame is less or equal to the minimum time for a HARD_TURN
+				if(Long.parseLong(timeframe) <= HARD_TURN_TIME_FRAME) Thread.sleep(HARD_TURN_TIME_FRAME);
+				else Thread.sleep(Long.parseLong(timeframe));
+				
+				// Stop movement
 				Movement.stop();
+				
+				// Remove movement from display
+				LCD.clear();
+				
+				// Minor fix
+				Thread.sleep(100);
 				break;
 			default:
 				LCD.clear();
 				LCD.drawString("Command not recognised", 0, 0);
-				Thread.sleep(2500);
+				Thread.sleep(1800);
 				LCD.clear();
 				
 				// Throw exception
