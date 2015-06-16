@@ -22,7 +22,6 @@ public class RConn {
 	private RobotControl rctrl;
 	private boolean connected;
 	
-	
 	/**
 	 * Class constructor for RConnection.<br><br>
 	 * 
