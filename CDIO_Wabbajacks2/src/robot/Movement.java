@@ -94,7 +94,8 @@ public class Movement{
 	}
 	
 	/**
-	 * turn left XX degrees
+	 * turn left XX degrees while driving
+	 * The more speed the harder the turn
 	 */
 	public static void softLeft() {
 		leftMotor.setSpeed((int)(SPEED*0.33));
@@ -104,7 +105,8 @@ public class Movement{
 	}
 	
 	/**
-	 * turn right XX degrees
+	 * turn right XX degrees while driving
+	 * The more speed the harder the turn
 	 */
 	public static void softRight() {
 		leftMotor.setSpeed(SPEED);
