@@ -114,6 +114,30 @@ public class Movement{
 	}
 	
 	/**
+	 * Turn left xx degrees while stationary
+	 * @param angle
+	 */
+	public static void turnLeft(int degree) {
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
+		
+		leftMotor.rotate(degree*2);
+		rightMotor.rotate(-degree*2);
+	}
+	
+	/**
+	 * Turn right xx degrees while stationary
+	 * @param angle
+	 */
+	public static void turnRight(int degree) {
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
+		
+		leftMotor.rotate(-degree*2);
+		rightMotor.rotate(degree*2);
+	}
+	
+	/**
 	 * Robot takes a corner with the help of the front UltrasonicSensor
 	 * @param US - UltrasonicSensor object
 	 * @param direction - 0 going left, 1 going right else nothing
