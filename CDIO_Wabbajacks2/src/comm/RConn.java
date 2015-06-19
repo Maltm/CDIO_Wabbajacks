@@ -77,6 +77,13 @@ public class RConn {
 			mid.setAcceleration(6000);
 			mid.forward();
 			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					
+				}
+			});
+			
 			try {
 				// Buffer string
 				String msg = null;
@@ -124,19 +131,13 @@ public class RConn {
 			} finally {
 				// End communication and close resources
 				try {
+					Button.waitForAnyPress();
 					mid.stop();
 					
 					Music music = new Music();
 					
 					for (int i = 0; i < melody.length; i++) {
 						music.musicPiano(melody[i], 300);
-						System.out.println(melody[i]);
-					}
-					
-					Sound.pause(300);
-					
-					for (int i = 0; i < melody.length; i++) {
-						music.musicTone(melody[i], 300);
 						System.out.println(melody[i]);
 					}
 					
