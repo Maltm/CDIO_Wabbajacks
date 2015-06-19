@@ -101,9 +101,6 @@ public class MoveControl extends Thread {
 				
 				// Remove movement from display
 				LCD.clear();
-				
-				// Minor fix
-				Thread.sleep(100);
 				break;
 			case "C_BW":
 				// Do movement
@@ -124,9 +121,6 @@ public class MoveControl extends Thread {
 				
 				// Remove movement from display
 				LCD.clear();
-				
-				// Minor fix
-				Thread.sleep(100);
 				break;
 			case "C_HL":
 				// Do movement
@@ -145,9 +139,6 @@ public class MoveControl extends Thread {
 				
 				// Remove movement from display
 				LCD.clear();
-				
-				// Minor fix
-				Thread.sleep(100);
 				break;
 			case "C_HR":
 				// Do movement
@@ -166,32 +157,27 @@ public class MoveControl extends Thread {
 				
 				// Remove movement from display
 				LCD.clear();
-				
-				// Minor fix
-				Thread.sleep(100);
 				break;
-			case "C_TL degree":
+			case "C_TL":
 				// Do movement
 				Movement.turnLeft(Integer.parseInt(timeframe));
 				
 				// Note to movement on display
 				LCD.clear();
 				LCD.drawString("Turn left", 0, 0);
-				
 				break;
-			case "C_TR degree":
+			case "C_TR":
 				// Do Movement
 				Movement.turnRight(Integer.parseInt(timeframe));
 				
 				//Note to movement on display
 				LCD.clear();
 				LCD.drawString("Turn right", 0, 0);
-				
 				break;
 			default:
 				LCD.clear();
 				LCD.drawString("Command not recognised", 0, 0);
-				Thread.sleep(1800);
+				Thread.sleep(500);
 				LCD.clear();
 				
 				// Throw exception
