@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
+import robot.Movement;
 //import robot.RobotControl;
 import lejos.nxt.LCD;
 import lejos.nxt.comm.Bluetooth;
@@ -73,6 +75,20 @@ public class RConn {
 						 * TODO
 						 * Put logic here - how to move etc.
 						 */
+						
+						switch(msg) {
+							case "fw":
+								Movement.forward();
+								break;
+							case "bw":
+								Movement.backward();
+								break;
+							case "br":
+								Movement.stop();
+								break;
+							default:
+								break;
+						}
 						
 						// Write the response back to the connected device
 						this.out.writeBytes("Received: " + msg + "\n");
