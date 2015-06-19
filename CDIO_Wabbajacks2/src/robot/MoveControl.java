@@ -170,6 +170,24 @@ public class MoveControl extends Thread {
 				// Minor fix
 				Thread.sleep(100);
 				break;
+			case "C_TL degree":
+				// Do movement
+				Movement.turnLeft(degree);
+				
+				// Note to movement on display
+				LCD.clear();
+				LCD.drawString("Turn left", 0, 0);
+				
+				break;
+			case "C_TR degree":
+				// Do Movement
+				Movement.turnRight(degree);
+				
+				//Note to movement on display
+				LCD.clear();
+				LCD.drawString("Turn right", 0, 0);
+				
+				break;
 			default:
 				LCD.clear();
 				LCD.drawString("Command not recognised", 0, 0);
