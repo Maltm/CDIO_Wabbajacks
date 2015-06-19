@@ -172,7 +172,7 @@ public class MoveControl extends Thread {
 				break;
 			case "C_TL degree":
 				// Do movement
-				Movement.turnLeft(degree);
+				Movement.turnLeft(Integer.parseInt(timeframe));
 				
 				// Note to movement on display
 				LCD.clear();
@@ -181,7 +181,7 @@ public class MoveControl extends Thread {
 				break;
 			case "C_TR degree":
 				// Do Movement
-				Movement.turnRight(degree);
+				Movement.turnRight(Integer.parseInt(timeframe));
 				
 				//Note to movement on display
 				LCD.clear();

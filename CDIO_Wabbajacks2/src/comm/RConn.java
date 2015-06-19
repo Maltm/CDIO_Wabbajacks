@@ -6,11 +6,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
+
+
+
+
+
+
 import robot.Movement;
+import robot.utils.sound.Music;
+import robot.utils.sound.MusicTest;
+import lejos.nxt.Button;
 //import robot.RobotControl;
 import lejos.nxt.LCD;
+import lejos.nxt.Motor;
+import lejos.nxt.Sound;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
+import lejos.robotics.RegulatedMotor;
 
 /*
  * Controls the connection FROM the brick TO the incoming connection.
@@ -23,6 +35,8 @@ public class RConn {
 	private DataOutputStream out;
 	//private RobotControl rctrl;
 	private boolean connected;
+	
+	private static String[] melody = {"D", "F#5", "B5", "G", "A", "D", "F#5", "G", "A", "E5", "A5", "Gb5"};
 	
 	/**
 	 * Class constructor for RConnection.<br><br>
@@ -57,6 +71,11 @@ public class RConn {
 			
 			// If streams are open set connected to true
 			if(this.in != null && this.out != null)	this.connected = true;
+			
+			RegulatedMotor mid = Motor.C;
+			
+			mid.setAcceleration(6000);
+			mid.forward();
 			
 			try {
 				// Buffer string
@@ -105,6 +124,24 @@ public class RConn {
 			} finally {
 				// End communication and close resources
 				try {
+					mid.stop();
+					
+					Music music = new Music();
+					
+					for (int i = 0; i < melody.length; i++) {
+						music.musicPiano(melody[i], 300);
+						System.out.println(melody[i]);
+					}
+					
+					Sound.pause(300);
+					
+					for (int i = 0; i < melody.length; i++) {
+						music.musicTone(melody[i], 300);
+						System.out.println(melody[i]);
+					}
+					
+					Button.waitForAnyPress();
+					
 					// Write an ending message to the connected device
 					this.out.writeBytes("END\n");
 					this.out.flush();
