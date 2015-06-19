@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import robot.RobotControl;
+//import robot.RobotControl;
 import lejos.nxt.LCD;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
@@ -19,7 +19,7 @@ import lejos.nxt.comm.NXTConnection;
 public class RConn {
 	private BufferedReader in;
 	private DataOutputStream out;
-	private RobotControl rctrl;
+	//private RobotControl rctrl;
 	private boolean connected;
 	
 	/**
@@ -36,24 +36,24 @@ public class RConn {
 	public RConn() {
 		// Will wait for connection. When this connection is ended, a new connection can be established (hence the while-loop)
 		while (true) {
-			this.rctrl = new RobotControl();
+			LCD.clear();
+			
 			this.connected = false;
 			
 			// Print a string on the display, indicating that RConn has been instantiated
-			LCD.clear();
-			LCD.drawString("Waiting...", 0, 0);
+			System.out.println("Waiting...");
 			
 			// Open a bluetooth connection and wait for a device to connect
 			NXTConnection conn = Bluetooth.waitForConnection();
 			
 			// When a device has connected print its address on the display
-			LCD.drawString("Connected to:\n" + conn.getAddress(), 0, 1);
+			System.out.println("Connected to:\n" + conn.getAddress());
 			
 			// Open streams for communication
 			this.in = new BufferedReader(new InputStreamReader(conn.openDataInputStream()));
 			this.out = conn.openDataOutputStream();
 			
-			// If streams are open set set connected to true
+			// If streams are open set connected to true
 			if(this.in != null && this.out != null)	this.connected = true;
 			
 			try {
@@ -69,19 +69,20 @@ public class RConn {
 							break;
 						}
 						
-						// ... send the command to the robot controller and prepare a response
-						String response = this.rctrl.doCommand(msg);
+						/**
+						 * TODO
+						 * Put logic here - how to move etc.
+						 */
 						
 						// Write the response back to the connected device
-						this.out.writeBytes(response + "\n");
+						this.out.writeBytes("Received: " + msg + "\n");
 						this.out.flush();
 						
 						// Print the response on the display
-						LCD.clear();
-						LCD.drawString("Reply:\n" + response, 0, 0);
-						
-						LCD.clear();
+						System.out.println("Reply:\n" + msg);
 					}
+					
+					System.gc();
 				}
 			} catch (IOException e) {
 				// TODO
@@ -96,8 +97,6 @@ public class RConn {
 					this.out.close();
 					this.in.close();
 					conn.close();
-					
-					this.rctrl = null;
 				} catch(IOException e) {
 					System.out.println(e.getMessage());
 				}
